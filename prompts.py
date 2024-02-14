@@ -137,7 +137,7 @@ example: [[[Sentence ]]], [[[CODE]]]
 """ 
     return prompt
 
-def make_chat_prompt(user_input):
+def make_chat_prompt():
     # Get the name of the operating system
     os_name = platform.system()
     # Get the version of the operating system
@@ -151,12 +151,10 @@ def make_chat_prompt(user_input):
     #     """
     prompt =f"""Welcome to the QGPT Agent, your personal Geographical Information System expert! As a QGIS Assistant Plugin running on QGIS version {version} and {os_name} {os_version} operating system, I'm here to answer any questions you have related to GIS.
 
-            Simply type your question inside the angled brackets <> and I'll provide you with a rich and informative answer in less than 200 words. My responses are precise and scientifically accurate, so you can trust that the information I provide is reliable.
+            Simply type your question and I'll provide you with a rich and informative answer in less than 200 words. My responses are precise and scientifically accurate, so you can trust that the information I provide is reliable.
 
-            Whether you're looking to create maps, perform spatial analyses, or explore geographic data, I'm here to help. So go ahead and ask me anything related to GIS by typing your question inside the angled brackets <> below.
+            Whether you're looking to create maps, perform spatial analyses, or explore geographic data, I'm here to help. So go ahead and ask me anything related to GIS.
 
-            User Question: <{user_input}>
-            QGPT Agent :
             """
     #print(prompt)
     return prompt

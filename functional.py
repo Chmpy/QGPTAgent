@@ -9,6 +9,8 @@ import tempfile
 import os
 import subprocess
 import sys
+import pydevd_pycharm
+from openai import OpenAI
 from qgis.PyQt.QtCore import QThreadPool
 from PyQt5.QtCore import QThread, pyqtSignal
 from qgis.utils import *
@@ -39,52 +41,34 @@ iface.mapCanvas().refresh()"""
     return True, code_printout
 
 # Get completion from OpenAI API
-def get_completion(prompt,api_key,temprature=0.0):
+def get_completion(prompt, user_input,api_key,temprature=0.0):
+    client = OpenAI(api_key=api_key)
 
-    # Replace MODEL_ID with the ID of the OpenAI model you want to use
-    model_id = 'gpt-3.5-turbo'
-    max_tockens = 1000
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system",
+             "content": prompt},
+            {"role": "user", "content": user_input}
+        ]
+    )
 
-    # Define the parameters for the API request
-    data = {
-        'model': model_id,
-        'prompt': prompt,
-        "max_tokens": max_tockens,
-        "temperature": temprature,
-        }
-
-    # Define the headers for the API request
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {api_key}',
-    }
-    try:
-        # Send the API request and get the response
-        response = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
-        #print(response)
-        if response.status_code==200:
-            
-            # Parse the response to get the text completion
-            completion = response.json()['choices'][0]['text']
-        else:
-            completion ='code_error'
-    except:
-        completion='connection_error'
-    return completion
+    return completion.choices[0].message.content
 
 #Get completion thread
 class RequestWorker(QThread):
     # Define a custom signal to emit when the request is finished
     finished_signal = pyqtSignal(str)
     
-    def __init__(self, prompt,api_key,temprature=0.0):
+    def __init__(self,prompt, user_input,api_key,temprature=0.0):
         super().__init__()
         self.prompt=prompt
+        self.user_input=user_input
         self.api_key =api_key
         self.temprature=temprature
     
     def run(self):
-        completion =get_completion(self.prompt, self.api_key,self.temprature)
+        completion =get_completion(self.prompt, self.user_input, self.api_key,self.temprature)
         self.finished_signal.emit(completion)
 
 # Run code in a thread
