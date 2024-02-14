@@ -334,10 +334,10 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if self.mode:
             self.chat_text =self.chat_text+'\n'+self.agentName +' : ' +'Processing Your Order ...'
             self.update_chat()
-            prompt = make_prompt(self.command,self.runPrompt)
+            prompt = make_prompt(self.runPrompt)
             #print(prompt)
             #completion = get_completion()
-            self.worker = RequestWorker(prompt, self.apiTocken)
+            self.worker = RequestWorker(prompt, self.command, self.apiTocken,temprature=self.chatTemperature)
             self.worker.finished_signal.connect(self.run_code)
 
             # Add the worker to a QThreadPool and start it
