@@ -25,6 +25,8 @@
 import os
 import subprocess
 import sys
+
+import pydevd_pycharm
 from qgis.PyQt import QtGui, QtWidgets, uic
 from qgis.PyQt.QtCore import pyqtSignal
 import requests
@@ -147,6 +149,9 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.docLabel.setOpenExternalLinks(True)
     
         self.update_chat()
+
+        pydevd_pycharm.settrace('localhost', port=53100, stdoutToServer=True, stderrToServer=True)
+
     def create_database(self):
         with open(os.path.join(os.path.dirname(__file__), 'qgpt_agent.db'),'w') as f:
             f.close()

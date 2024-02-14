@@ -42,7 +42,7 @@ iface.mapCanvas().refresh()"""
 def get_completion(prompt,api_key,temprature=0.0):
 
     # Replace MODEL_ID with the ID of the OpenAI model you want to use
-    model_id = 'text-davinci-003'
+    model_id = 'gpt-3.5-turbo'
     max_tockens = 1000
 
     # Define the parameters for the API request
@@ -60,7 +60,7 @@ def get_completion(prompt,api_key,temprature=0.0):
     }
     try:
         # Send the API request and get the response
-        response = requests.post('https://api.openai.com/v1/completions', json=data, headers=headers)
+        response = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
         #print(response)
         if response.status_code==200:
             
