@@ -45,7 +45,7 @@ def get_completion(prompt, user_input,api_key,temprature=0.0):
     client = OpenAI(api_key=api_key)
 
     completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4-0125-preview",
         messages=[
             {"role": "system",
              "content": prompt},

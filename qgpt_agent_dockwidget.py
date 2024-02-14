@@ -431,7 +431,7 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             prompt = make_debug_prompt(code,msg)
                 #print(prompt)
             #completion = get_completion(prompt, self.apiTocken)
-            self.worker = RequestWorker(prompt, self.apiTocken)
+            self.worker = RequestWorker(prompt, "", self.apiTocken)
             self.worker.finished_signal.connect(self.debug_code)
 
             # Add the worker to a QThreadPool and start it
