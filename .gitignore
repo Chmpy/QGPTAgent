@@ -3,3 +3,4 @@ release.sh
 qgpt_agent.db
 .idea
 .DS_Store
+config.ini

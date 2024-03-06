@@ -81,8 +81,7 @@ iface.mapCanvas().refresh()"""
     # Get the version of the operating system
     os_version = platform.release()
     # Prompt Engineering part
-    prompt = f"""You are QGPT Agent (QGIS Assistant Plugin ) running on QGIS version ({version}) and ({os_name} {os_version}) operation system \
-    you provided the following python code:
+    prompt = f"""
 {code}
 The above code returns the error "{error}". Please briefly explain why the error is happening in one sentence bounded by brackets [[[ SENTENCE]]], then write the corrected python code bounded by brackets [[[ CODE ]]].
 example: [[[Sentence ]]], [[[CODE]]]

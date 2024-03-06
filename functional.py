@@ -1,3 +1,5 @@
+import asyncio
+
 import requests
 import processing
 import io
@@ -15,7 +17,7 @@ from qgis.PyQt.QtCore import QThreadPool
 from PyQt5.QtCore import QThread, pyqtSignal
 from qgis.utils import *
 import sqlite3
-from .Clarifai import process_user_input
+from .Azure import process_user_input
 # code containerization
 def containerize_code(code_string):
     code_string ="""from qgis.core import *
@@ -42,7 +44,7 @@ iface.mapCanvas().refresh()"""
     return True, code_printout
 
 # Get completion from OpenAI API
-def get_completion(prompt, user_input,api_key,temprature=0.0):
+def get_completion(user_input):
     return process_user_input(user_input)
 
     # client = OpenAI(api_key=api_key)
@@ -63,15 +65,12 @@ class RequestWorker(QThread):
     # Define a custom signal to emit when the request is finished
     finished_signal = pyqtSignal(str)
     
-    def __init__(self,prompt, user_input,api_key,temprature=0.0):
+    def __init__(self, user_input):
         super().__init__()
-        self.prompt=prompt
         self.user_input=user_input
-        self.api_key =api_key
-        self.temprature=temprature
     
     def run(self):
-        completion =get_completion(self.prompt, self.user_input, self.api_key,self.temprature)
+        completion = get_completion(self.user_input)
         self.finished_signal.emit(completion)
 
 # Run code in a thread
