@@ -15,6 +15,7 @@ from qgis.PyQt.QtCore import QThreadPool
 from PyQt5.QtCore import QThread, pyqtSignal
 from qgis.utils import *
 import sqlite3
+from .Clarifai import process_user_input
 # code containerization
 def containerize_code(code_string):
     code_string ="""from qgis.core import *
@@ -42,18 +43,20 @@ iface.mapCanvas().refresh()"""
 
 # Get completion from OpenAI API
 def get_completion(prompt, user_input,api_key,temprature=0.0):
-    client = OpenAI(api_key=api_key)
+    return process_user_input(user_input)
 
-    completion = client.chat.completions.create(
-        model="gpt-4-0125-preview",
-        messages=[
-            {"role": "system",
-             "content": prompt},
-            {"role": "user", "content": user_input}
-        ]
-    )
-
-    return completion.choices[0].message.content
+    # client = OpenAI(api_key=api_key)
+    #
+    # completion = client.chat.completions.create(
+    #     model="gpt-4-0125-preview",
+    #     messages=[
+    #         {"role": "system",
+    #          "content": prompt},
+    #         {"role": "user", "content": user_input}
+    #     ]
+    # )
+    #
+    # return completion.choices[0].message.content
 
 #Get completion thread
 class RequestWorker(QThread):
