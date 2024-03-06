@@ -26,7 +26,6 @@ import os
 import subprocess
 import sys
 
-import pydevd_pycharm
 from qgis.PyQt import QtGui, QtWidgets, uic
 from qgis.PyQt.QtCore import pyqtSignal
 import requests
@@ -149,8 +148,6 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.docLabel.setOpenExternalLinks(True)
     
         self.update_chat()
-
-        pydevd_pycharm.settrace('localhost', port=53100, stdoutToServer=True, stderrToServer=True)
 
     def create_database(self):
         with open(os.path.join(os.path.dirname(__file__), 'qgpt_agent.db'),'w') as f:
@@ -337,10 +334,10 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if self.mode:
             self.chat_text =self.chat_text+'\n'+self.agentName +' : ' +'Processing Your Order ...'
             self.update_chat()
-            prompt = make_prompt(self.command,self.runPrompt)
+            prompt = make_prompt(self.runPrompt)
             #print(prompt)
             #completion = get_completion()
-            self.worker = RequestWorker(prompt, self.apiTocken)
+            self.worker = RequestWorker(prompt, self.command, self.apiTocken,temprature=self.chatTemperature)
             self.worker.finished_signal.connect(self.run_code)
 
             # Add the worker to a QThreadPool and start it
@@ -381,11 +378,10 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         else:
             #self.chat_text =self.chat_text+'\n'+self.agentName +' : '+self.msgEdit.text()
-            prompt = make_chat_prompt(self.command)
+            prompt = make_chat_prompt()
             #completion = get_completion(prompt, self.apiTocken)
-            worker = RequestWorker(prompt, self.apiTocken,temprature=self.chatTemperature)
+            worker = RequestWorker(prompt, self.command, self.apiTocken,temprature=self.chatTemperature)
             worker.finished_signal.connect(self.run_chat)
-
             # Add the worker to a QThreadPool and start it
             worker.run()
             #self.chat_text =self.chat_text+'\n'+self.agentName +' : ' +completion
@@ -435,7 +431,7 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             prompt = make_debug_prompt(code,msg)
                 #print(prompt)
             #completion = get_completion(prompt, self.apiTocken)
-            self.worker = RequestWorker(prompt, self.apiTocken)
+            self.worker = RequestWorker(prompt, "", self.apiTocken)
             self.worker.finished_signal.connect(self.debug_code)
 
             # Add the worker to a QThreadPool and start it
