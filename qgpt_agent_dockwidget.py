@@ -234,7 +234,7 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             prompt = make_debug_prompt(self.python_code, print_output)
                 #print(prompt)
             #completion = get_completion(prompt, self.apiTocken)
-            self.worker = RequestWorker(prompt, self.apiTocken)
+            self.worker = RequestWorker(prompt)
             self.worker.finished_signal.connect(self.debug_code)
 
             # Add the worker to a QThreadPool and start it
@@ -337,7 +337,7 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             prompt = make_prompt(self.runPrompt)
             #print(prompt)
             #completion = get_completion()
-            self.worker = RequestWorker(prompt, self.command, self.apiTocken,temprature=self.chatTemperature)
+            self.worker = RequestWorker(self.command)
             self.worker.finished_signal.connect(self.run_code)
 
             # Add the worker to a QThreadPool and start it
@@ -380,7 +380,7 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             #self.chat_text =self.chat_text+'\n'+self.agentName +' : '+self.msgEdit.text()
             prompt = make_chat_prompt()
             #completion = get_completion(prompt, self.apiTocken)
-            worker = RequestWorker(prompt, self.command, self.apiTocken,temprature=self.chatTemperature)
+            worker = RequestWorker(self.command)
             worker.finished_signal.connect(self.run_chat)
             # Add the worker to a QThreadPool and start it
             worker.run()
@@ -431,7 +431,7 @@ class QGPTAgentDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             prompt = make_debug_prompt(code,msg)
                 #print(prompt)
             #completion = get_completion(prompt, self.apiTocken)
-            self.worker = RequestWorker(prompt, "", self.apiTocken)
+            self.worker = RequestWorker(prompt)
             self.worker.finished_signal.connect(self.debug_code)
 
             # Add the worker to a QThreadPool and start it
